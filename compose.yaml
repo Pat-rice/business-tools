@@ -1,0 +1,46 @@
+services:
+  traefik:
+    image: "traefik:${VERSION}"
+    container_name: "traefik"
+    restart: always
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=web"
+      #      - "--ping=true"
+      - "--entrypoints.web.address=:80"
+      - "--api.dashboard=true"
+      - "--accesslog=true"
+      - "--metrics.prometheus=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls.certResolver=sslresolver"
+#      - "--certificatesresolvers.sslresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # let's encrypt staging serve
+      - "--certificatesresolvers.sslresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.sslresolver.acme.storage=/etc/traefik/acme/acme.json"
+      - "--certificatesresolvers.sslresolver.acme.httpchallenge.entrypoint=web"
+    labels:
+      - "traefik.enable=${DASHBOARD_ENABLED}"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.rule=Host(`${DASHBOARD_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${DASHBOARD_BASIC_AUTH_CREDENTIALS}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - tls-storage:/etc/traefik/acme
+    networks:
+      - web
+volumes:
+  tls-storage:
+    name: traefik-tls-storage
+networks:
+  web:
+    name: web

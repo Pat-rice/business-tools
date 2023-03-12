@@ -1,0 +1,34 @@
+services:
+  postgres:
+    hostname: postgres
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file: .env
+    networks:
+      - keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.0.1
+    depends_on:
+      - postgres
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+    command:
+      - start
+    env_file: .env
+    networks:
+      - web
+      - keycloak
+volumes:
+  db:
+networks:
+  keycloak:
+    name: keycloak
+  web:
+    name: web
+    external: true
