@@ -10,7 +10,7 @@ You should also be comfortable with a little involvment in maintenance and perha
 
 That being said it's actually very helpful and can save you a lot of money while you get your business started and/or growing.
 If you grow too large for a single server setup, you should have enough money (hope so !) 
-to either pay for a hosted version or you have an ops team that can deploy these tools in a high availibility infrastructure.
+to either pay for a hosted version or you have an ops team that can deploy these tools in a highly available infrastructure.
 
 If you want to add a service, don't hesitate to create a pull request.
 
