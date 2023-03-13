@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      TZ: $TIMEZONE
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+    networks:
+      - mattermost
+  mattermost:
+    image: mattermost/mattermost-team-edition:7.8
+    depends_on:
+      - db
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    tmpfs:
+      - /tmp
+    volumes:
+      - mattermost:/mattermost
+    environment:
+      TZ: $TIMEZONE
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable&connect_timeout=10
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mattermost.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.mattermost.entrypoints=websecure"
+      - "traefik.http.services.mattermost.loadbalancer.server.port=8065"
+    networks:
+      - mattermost
+      - web
+volumes:
+  db:
+  mattermost:
+networks:
+  mattermost:
+  web:
+    name: web
+    external: true

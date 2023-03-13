@@ -39,9 +39,7 @@ To start a service do the following:
 
 You can test the reverse proxy setup with the simple service `whoami` and you can also activate its dashboard (don't forget to update the credentials)
 
-## Testing
-
-docker run --net=host -it -e NGROK_AUTHTOKEN=xyz ngrok/ngrok:latest http 80
+Please note that service containers have to be in "healthy" state before being accessible
 
 ## Services
 
