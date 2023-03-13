@@ -20,12 +20,14 @@ However, it doesn't cover server security for which YOU are responsible.
 It's already well described in [Geerling Guy's ansible playbook](https://github.com/geerlingguy/ansible-role-security) and you can use it to start securing your server.
 For a thorough guide, see https://github.com/imthenachoman/How-To-Secure-A-Linux-Server
 
+Although the data are persisted to the host machine, you are responsible for backups.
+
 ## Prerequisites
 
-- You should have a running server reachable from outside, ideally with a static IP address.
-- You should have `docker` (version 23 or greater) and `docker compose` (version 2.16 or greater) setup
+- A running server reachable from outside
+- You should have [`docker`](https://www.docker.com/) (version 23 or greater) and [`docker compose`](https://docs.docker.com/compose/) (version 2.16 or greater) setup
 - The port `80` and `443` open
-- A wildcard DNS A record or a record per service that points to this server IP: `*.example.com A 1.2.3.4`
+- A wildcard DNS A record (or a DNS A record per service) that points to this server IP: `*.example.com A 1.2.3.4`
 
 ## Getting started
 
@@ -47,3 +49,5 @@ List of services currently present:
 - Traefik (reverse proxy, mandatory)
 - Whoami
 - Keycloak
+- Mattermost
+- Wordpress
