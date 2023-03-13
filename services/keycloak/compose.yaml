@@ -5,7 +5,10 @@ services:
     restart: always
     volumes:
       - db:/var/lib/postgresql/data
-    env_file: .env
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
     networks:
       - keycloak
   keycloak:
@@ -20,7 +23,19 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
     command:
       - start
-    env_file: .env
+    environment:
+      KC_HOSTNAME: $DOMAIN
+      KC_DB: postgres
+      KC_DB_URL_DATABASE: $DB_NAME
+      KC_DB_URL_HOST: $DB_HOST
+      KC_DB_URL_PORT: $DB_PORT
+      KC_DB_USERNAME: $DB_USER
+      KC_DB_PASSWORD: $DB_PASSWORD
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN
+      KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
+      KC_PROXY: edge
+      KC_TRANSACTION_XA_ENABLED: false
     networks:
       - web
       - keycloak
