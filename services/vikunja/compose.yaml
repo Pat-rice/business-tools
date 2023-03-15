@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    networks:
+      - vikunja
+  api:
+    image: vikunja/api
+    restart: always
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vikunja-api.rule=(Host(`${DOMAIN}`) && PathPrefix(`/api/v1`, `/dav/`, `/.well-known/`))"
+      - "traefik.http.routers.vikunja-api.entrypoints=websecure"
+      - "traefik.http.services.vikunja-api.loadbalancer.server.port=3456"
+    environment:
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_DATABASE: $DB_NAME
+      VIKUNJA_DATABASE_USER: $DB_USER
+      VIKUNJA_DATABASE_PASSWORD: $DB_PASSWORD
+      VIKUNJA_SERVICE_JWTSECRET: $JWT_SECRET
+      VIKUNJA_SERVICE_FRONTENDURL: "https://${DOMAIN}/"
+      VIKUNJA_DEFAULTSETTINGS_DISCOVERABLE_BY_NAME: true
+      VIKUNJA_DEFAULTSETTINGS_DISCOVERABLE_BY_EMAIL: true
+      VIKUNJA_DEFAULTSETTINGS_WEEK_START: 1
+      VIKUNJA_DEFAULTSETTINGS_TIMEZONE: $TIMEZONE
+      VIKUNJA_MAILER_ENABLED: $SMTP_ENABLED
+      VIKUNJA_MAILER_HOST: $SMTP_HOST
+      VIKUNJA_MAILER_PORT: $SMTP_PORT
+      VIKUNJA_MAILER_AUTH_TYPE: $SMTP_AUTH_TYPE
+      VIKUNJA_MAILER_USERNAME: $SMTP_USER
+      VIKUNJA_MAILER_PASSWORD: $SMTP_PASSWORD
+      VIKUNJA_MAILER_SKIPTLSVERIFY: $SMTP_SKIP_TLS_VERIFY
+      VIKUNJA_MAILER_FROMEMAIL: $SMTP_FROM_EMAIL
+      VIKUNJA_MAILER_FORCESSL: $SMTP_FORCE_SSL
+    volumes:
+      - vikunja-data:/app/vikunja/files
+    networks:
+      - vikunja
+      - web
+  frontend:
+    image: vikunja/frontend
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vikunja-frontend.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.vikunja-frontend.entrypoints=websecure"
+      - "traefik.http.services.vikunja-frontend.loadbalancer.server.port=80"
+    networks:
+      - web
+
+
+volumes:
+  db:
+  vikunja-data:
+
+networks:
+  vikunja:
+  web:
+    name: web
+    external: true

@@ -46,8 +46,27 @@ Please note that service containers have to be in "healthy" state before being a
 ## Services
 
 List of services currently present:
-- Traefik (reverse proxy, mandatory)
-- Whoami
-- Keycloak
-- Mattermost
-- Wordpress
+- [Traefik](https://doc.traefik.io/traefik/) - **mandatory** - reverse proxy
+- [Whoami](https://hub.docker.com/r/containous/whoami) - test service
+- [Keycloak](https://www.keycloak.org/) - IAM
+- [Mattermost](https://mattermost.com/) - Team chat
+- [Wordpress](https://wordpress.org/) - CMS
+- [Vikunja](https://vikunja.io/) - Todo app
+
+Wish list:
+- Jitsi
+- Discourse
+- Nextcloud
+- Gitea
+- Gitlab
+- Cal.com
+- Zulip
+- Grafana
+- Loki
+- Prometheus
+- Supabase
+- Plausible
+- Matomo
+- Outline
+- Odoo
+- Uptime-Kuma
