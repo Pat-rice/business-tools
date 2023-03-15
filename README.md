@@ -52,6 +52,7 @@ List of services currently present:
 - [Mattermost](https://mattermost.com/) - Team chat
 - [Wordpress](https://wordpress.org/) - CMS
 - [Vikunja](https://vikunja.io/) - Todo app
+- [Docker registry](https://docs.docker.com/registry/) - Docker image registry
 
 Wish list:
 - Jitsi

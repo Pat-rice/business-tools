@@ -1,0 +1,44 @@
+#docker run -d -p 5000:5000 --privileged --restart=always --name s3-registry \
+#-v /docker-registry:/data:ro \
+#-e REGISTRY_STORAGE=s3 \
+#-e REGISTRY_STORAGE_S3_REGION=ap-southeast-2 \
+#-e REGISTRY_STORAGE_S3_BUCKET=my-bucket \
+#-e REGISTRY_STORAGE_S3_ENCRYPT=false \
+#-e REGISTRY_STORAGE_S3_SECURE=true \
+#-e REGISTRY_STORAGE_S3_V4AUTH=true \
+#-e REGISTRY_STORAGE_S3_CHUNKSIZE=5242880 \
+#-e REGISTRY_STORAGE_S3_ROOTDIRECTORY=/image-registry \
+#-e REGISTRY_HTTP_TLS_CERTIFICATE=/data/git.mydomain.com.crt \
+#-e REGISTRY_HTTP_TLS_KEY=/data/git.mydomain.com.key \
+#-e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+#-e REGISTRY_AUTH_HTPASSWD_PATH=/data/htpasswd \
+#registry:2
+
+services:
+  registry:
+    image: registry:2
+    restart: always
+    environment:
+      REGISTRY_STORAGE: filesystem
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_HTTP_SECRET: $HTTP_SECRET
+      REGISTRY_AUTH_HTPASSWD_REALM: $DOMAIN
+      REGISTRY_AUTH_HTPASSWD_PATH: /data/htpasswd
+    volumes:
+      - ./htpasswd:/data/htpasswd:ro
+      - registry:/var/lib/registry
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.registry.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.registry.entrypoints=websecure"
+      - "traefik.http.services.registry.loadbalancer.server.port=5000"
+    networks:
+      - web
+
+volumes:
+  registry:
+
+networks:
+  web:
+    name: web
+    external: true
