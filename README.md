@@ -29,6 +29,10 @@ Although the data are persisted to the host machine, you are responsible for bac
 - The port `80` and `443` open
 - A wildcard DNS A record (or a DNS A record per service) that points to this server IP: `*.example.com A 1.2.3.4`
 
+Highly recommended:
+- One or more S3-like bucket with S3 credentials with read/write permissions (great for backup and flexible storage)
+- A smtp server for transactional email (email verification, notifications, etc..)
+
 ## Getting started
 
 The only mandatory service is the reverse proxy (traefik) located at the root of the project.
@@ -41,7 +45,7 @@ To start a service do the following:
 
 You can test the reverse proxy setup with the simple service `whoami` and you can also activate its dashboard (don't forget to update the credentials)
 
-Please note that service containers have to be in "healthy" state before being accessible
+Please note that service containers have to be in "healthy" state before being accessible, depending on the service, it can take several minutes.
 
 ## Services
 
