@@ -57,13 +57,13 @@ List of services currently present:
 - [Wordpress](https://wordpress.org/) - CMS
 - [Vikunja](https://vikunja.io/) - Todo app
 - [Docker registry](https://docs.docker.com/registry/) - Docker image registry
+- [Gitlab](https://gitlab.com/) - CI & more
 
 Wish list:
 - Jitsi
 - Discourse
 - Nextcloud
 - Gitea
-- Gitlab
 - Cal.com
 - Zulip
 - Grafana
