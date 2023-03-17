@@ -1,31 +1,8 @@
-#        # backup
-#        gitlab_rails['backup_archive_permissions'] = 0644 # See: https://docs.gitlab.com/ce/raketasks/backup_restore.html#backup-archive-permissions
-#        gitlab_rails['backup_keep_time'] = 1468800 # 17 days, we'll do a full backup every 5 days
-#        gitlab_rails['backup_upload_connection'] = {
-#          'provider' => 'AWS',
-#          'region' => 'us-east-1',
-#          'aws_access_key_id' => "${S3_ACCESS_KEY_ID_GITLAB_BACKUP}",
-#          'aws_secret_access_key' => "${S3_SECRET_ACCESS_KEY_GITLAB_BACKUP}"
-#        }
-#        gitlab_rails['backup_upload_remote_directory'] = 's3-backup-bucket'
-### SMTP Settings https://docs.gitlab.com/omnibus/settings/smtp.html
-#gitlab_rails['smtp_enable'] = true
-#gitlab_rails['smtp_address'] = "smtp.example.com"
-#gitlab_rails['smtp_port'] = 587
-#gitlab_rails['smtp_user_name'] = "username"
-#gitlab_rails['smtp_password'] = "password"
-#gitlab_rails['smtp_domain'] = "example.com"
-#gitlab_rails['smtp_authentication'] = "login"
-#gitlab_rails['smtp_enable_starttls_auto'] = true
-#gitlab_rails['smtp_tls'] = false
-#gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
-#
-### Email Settings
-#gitlab_rails['gitlab_email_from'] = 'gitlab@example.com'
-#gitlab_rails['gitlab_email_reply_to'] = 'noreply@example.com'
+
 services:
-  web:
+  gitlab:
     image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
     restart: always
     environment:
       GITLAB_OMNIBUS_CONFIG: |
@@ -33,6 +10,29 @@ services:
         nginx['listen_https'] = false
         nginx['listen_port'] = 80
         letsencrypt['enable'] = false
+        gitlab_rails['smtp_enable'] = $SMTP_ENABLED
+        gitlab_rails['smtp_address'] = '$SMTP_HOST'
+        gitlab_rails['smtp_port'] = $SMTP_PORT
+        gitlab_rails['smtp_user_name'] = '$SMTP_USER'
+        gitlab_rails['smtp_password'] = '$SMTP_PASSWORD'
+        gitlab_rails['smtp_domain'] = '$DOMAIN'
+        gitlab_rails['smtp_authentication'] = '$SMTP_AUTH_TYPE'
+        gitlab_rails['smtp_enable_starttls_auto'] = $SMTP_STARTTLS_AUTO
+        gitlab_rails['smtp_tls'] = $SMTP_FORCE_SSL
+        gitlab_rails['smtp_openssl_verify_mode'] = '$SMTP_OPENSSL_VERIFY_MODE'
+        gitlab_rails['gitlab_email_from'] = '$SMTP_FROM_EMAIL'
+        gitlab_rails['gitlab_email_reply_to'] = '$SMTP_REPLY_TO'
+        
+        gitlab_rails['backup_archive_permissions'] = 0644 
+        gitlab_rails['backup_keep_time'] = $BACKUP_KEEP_TIME
+        gitlab_rails['backup_upload_connection'] = {
+          'provider' => 'AWS',
+          'region' => '$S3_REGION',
+          'aws_access_key_id' => '$S3_ACCESS_KEY',
+          'aws_secret_access_key' => '$S3_SECRET_KEY'
+          'endpoint' => '$S3_ENDPOINT'
+        }
+        gitlab_rails['backup_upload_remote_directory'] = '$S3_BUCKET'
 #    ports:
 #      - "2222:22"  # expose GitLab SSH on port 2222 on the host, as Traefik does not yet support TCP routing
     labels:
