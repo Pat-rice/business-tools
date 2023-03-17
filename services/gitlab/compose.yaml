@@ -29,7 +29,7 @@ services:
           'provider' => 'AWS',
           'region' => '$S3_REGION',
           'aws_access_key_id' => '$S3_ACCESS_KEY',
-          'aws_secret_access_key' => '$S3_SECRET_KEY'
+          'aws_secret_access_key' => '$S3_SECRET_KEY',
           'endpoint' => '$S3_ENDPOINT'
         }
         gitlab_rails['backup_upload_remote_directory'] = '$S3_BUCKET'
@@ -41,16 +41,19 @@ services:
       - "traefik.http.routers.gitlab.entrypoints=websecure"
       - "traefik.http.services.gitlab.loadbalancer.server.port=80"
     volumes:
-      - config:/config:/etc/gitlab
-      - logs:/var/log/gitlab'
-      - data:/var/opt/gitlab'
+      - config:/etc/gitlab
+      - logs:/var/log/gitlab
+      - data:/var/opt/gitlab
     shm_size: '256m'
     networks:
       - web
 volumes:
   config:
+    name: gitlab_config
   logs:
+    name: gitlab_logs
   data:
+    name: gitlab_data
 networks:
   web:
     name: web
