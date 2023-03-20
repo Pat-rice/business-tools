@@ -10,9 +10,9 @@ After running `docker compose up -d` you can retrieve the initial admin credenti
 
 ## Backup
 
-**Warning**: the commands are provided to help you define a backup strategy, **you** are responsible to test and manage these backups
+The following commands are provided to help you define a backup strategy, **you** are responsible to test and manage these backups
 
-Create a manual backup (If you have setup S3 credentials correctly, the backup should be present on your bucket.):
+**Create a manual backup** (If you have setup S3 credentials correctly, the backup should be present on your bucket.):
 
 ```
 docker exec -t gitlab gitlab-backup create
