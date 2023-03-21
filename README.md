@@ -45,11 +45,14 @@ Highly recommended:
 The only mandatory service is the reverse proxy (traefik) located at the root of the project.
 So first follow the instruction while being at the root of the project. Then go to any service directory and do the same steps.
 
+If you prefer a GUI, you can also start the portainer service and then manage all the other services with portainer. 
+The `compose.yaml` and `.env` files are compatible with portainer.
+
 To start a service do the following:
 1. Clone this repository 
 ```bash
 git clone https://github.com/Wavestream-Labs/business-tools business-tools
-cd revolt
+cd business-tools
 ```
 1. Copy the .env.example and name it .env
 1. Update the .env file with your values (Domain name, credentials, etc..)
@@ -70,6 +73,7 @@ List of services currently present:
 - [Vikunja](https://vikunja.io/) - Todo app
 - [Docker registry](https://docs.docker.com/registry/) - Docker image registry
 - [Gitlab](https://gitlab.com/) - CI & more
+- [Portainer](https://www.portainer.io) - Container management with GUI
 
 Wish list:
 - Jitsi
