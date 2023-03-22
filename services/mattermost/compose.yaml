@@ -1,11 +1,11 @@
 services:
   db:
     image: postgres:15-alpine
+    container_name: mattermost-db
     restart: always
     security_opt:
       - no-new-privileges:true
     pids_limit: 100
-    read_only: true
     tmpfs:
       - /tmp
       - /var/run/postgresql
@@ -20,6 +20,7 @@ services:
       - mattermost
   mattermost:
     image: mattermost/mattermost-team-edition:7.8
+    container_name: mattermost
     depends_on:
       - db
     restart: always

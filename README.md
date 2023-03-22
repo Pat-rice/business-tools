@@ -39,6 +39,7 @@ Although the data are persisted to the host machine, and some services have back
 Highly recommended:
 - One or more S3-like bucket with S3 credentials with read/write permissions (great for backup and flexible storage)
 - A smtp server for transactional email (email verification, notifications, etc..)
+- [GPG](https://gnupg.org/) (should be installed by default on linux) to encrypt backup
 
 ## Getting started
 
