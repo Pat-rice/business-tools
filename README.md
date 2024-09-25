@@ -52,7 +52,7 @@ The `compose.yaml` and `.env` files are compatible with portainer.
 To start a service do the following:
 1. Clone this repository 
 ```bash
-git clone https://github.com/Wavestream-Labs/business-tools business-tools
+git clone https://github.com/Pat-rice/business-tools business-tools
 cd business-tools
 ```
 1. Copy the .env.example and name it .env
